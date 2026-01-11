@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Confetti from './components/Confetti';
 import MusicPlayer from './components/MusicPlayer';
 import { generateBirthdayWish, generateBirthdayPoem } from './services/geminiService';
-import { Sparkles, Gift, Heart, PartyPopper, Cake, Feather } from 'lucide-react';
+import { Sparkles, Gift, Heart, PartyPopper, Cake, Feather, ArrowRight } from 'lucide-react';
 
 const App: React.FC = () => {
+  const [started, setStarted] = useState<boolean>(false);
   const [wish, setWish] = useState<string>('');
   const [poem, setPoem] = useState<string>('');
   const [loadingWish, setLoadingWish] = useState<boolean>(false);
@@ -25,17 +26,59 @@ const App: React.FC = () => {
     setLoadingPoem(false);
   };
 
+  const handleOpenGift = () => {
+    setStarted(true);
+    // Slight delay for the card animation to start after the gift "opens"
+    setTimeout(() => setShowCard(true), 100);
+  };
+
   useEffect(() => {
-    // Initial animation delay
-    setTimeout(() => setShowCard(true), 500);
-    // Generate initial poem
+    // Generate initial poem silently so it's ready
     generatePoem();
   }, []);
 
+  // Intro Screen (Wrapped Gift)
+  if (!started) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-pink-200 via-purple-200 to-indigo-100 flex flex-col items-center justify-center relative overflow-hidden">
+        {/* Background Decorations */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-10 left-10 text-white/40 animate-float"><Heart size={100} /></div>
+          <div className="absolute bottom-20 right-10 text-white/40 animate-float" style={{animationDelay: '1s'}}><Sparkles size={120} /></div>
+        </div>
+
+        <div className="z-10 text-center px-4 animate-[fadeIn_1s_ease-out]">
+          <h1 className="font-script text-5xl md:text-7xl text-purple-600 mb-8 drop-shadow-sm">
+            Hey Ankita!
+          </h1>
+          <p className="text-xl text-gray-700 mb-12 font-sans max-w-md mx-auto">
+            I've created a special surprise just for you. Are you ready to see it?
+          </p>
+          
+          <button 
+            onClick={handleOpenGift}
+            className="group relative flex flex-col items-center justify-center transition-transform hover:scale-105 active:scale-95 focus:outline-none"
+          >
+            <div className="relative">
+              <div className="absolute inset-0 bg-pink-400 blur-xl opacity-40 group-hover:opacity-60 transition-opacity rounded-full"></div>
+              <div className="bg-gradient-to-br from-pink-500 to-purple-600 p-8 rounded-2xl shadow-2xl relative z-10 border-4 border-white/30">
+                <Gift size={64} className="text-white animate-bounce-gentle" />
+              </div>
+            </div>
+            <span className="mt-6 font-bold text-white bg-purple-500/80 backdrop-blur-sm px-6 py-2 rounded-full shadow-lg flex items-center gap-2 group-hover:bg-purple-600 transition-colors">
+              Open My Surprise <ArrowRight size={18} />
+            </span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Main Birthday App
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-100 to-yellow-50 relative overflow-hidden font-sans text-gray-800">
       <Confetti />
-      <MusicPlayer />
+      <MusicPlayer autoStart={true} />
 
       <main className="relative z-10 container mx-auto px-4 py-8 min-h-screen flex flex-col items-center justify-center">
         
@@ -54,8 +97,8 @@ const App: React.FC = () => {
         <div 
           className={`
             w-full max-w-2xl bg-white/60 backdrop-blur-xl rounded-3xl shadow-2xl p-8 md:p-12 border border-white/50
-            transform transition-all duration-1000 ease-out mb-12
-            ${showCard ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}
+            transform transition-all duration-1000 ease-[cubic-bezier(0.34,1.56,0.64,1)] mb-12
+            ${showCard ? 'scale-100 opacity-100 translate-y-0' : 'scale-50 opacity-0 translate-y-20'}
           `}
         >
           <div className="text-center mb-8">
@@ -75,7 +118,7 @@ const App: React.FC = () => {
             </p>
 
             {/* I Love You Message */}
-            <div className="bg-red-50/80 border border-red-100 rounded-2xl p-6 mb-8 transform hover:scale-105 transition-transform duration-300">
+            <div className="bg-red-50/80 border border-red-100 rounded-2xl p-6 mb-8 transform hover:scale-105 transition-transform duration-300 shadow-sm">
               <div className="flex flex-col items-center text-center">
                 <Heart className="text-red-500 fill-red-500 animate-bounce-gentle mb-3" size={32} />
                 <p className="font-script text-2xl md:text-3xl text-red-600 leading-relaxed">
