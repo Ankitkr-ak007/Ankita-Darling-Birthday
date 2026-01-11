@@ -4,7 +4,7 @@ import MusicPlayer from './components/MusicPlayer';
 import Balloons from './components/Balloons';
 import HoloCard from './components/HoloCard';
 import { generateBirthdayWish, generateBirthdayPoem } from './services/geminiService';
-import { Sparkles, Gift, Heart, Cpu, Zap, Star, Aperture, Terminal, Play } from 'lucide-react';
+import { Sparkles, Heart, Cpu, Zap, Star, Aperture, Terminal, Play } from 'lucide-react';
 
 const App: React.FC = () => {
   const [systemState, setSystemState] = useState<'LOCKED' | 'INITIALIZING' | 'ACTIVE'>('LOCKED');

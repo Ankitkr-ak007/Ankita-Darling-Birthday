@@ -1,5 +1,5 @@
 import React from 'react';
-import { Disc, BarChart2, Minimize2 } from 'lucide-react';
+import { Disc, Minimize2 } from 'lucide-react';
 
 interface MusicPlayerProps {
   playing: boolean;
