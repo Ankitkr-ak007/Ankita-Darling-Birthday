@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Happy Birthday Ankita!</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <script>
       tailwind.config = {
         theme: {
@@ -26,11 +26,27 @@
               'float': 'float 6s ease-in-out infinite',
               'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
               'bounce-gentle': 'bounce 2s infinite',
+              'balloon-rise': 'rise 15s linear infinite',
+              'shine': 'shine 3s linear infinite',
+              'slideUp': 'slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
             },
             keyframes: {
               float: {
                 '0%, 100%': { transform: 'translateY(0)' },
                 '50%': { transform: 'translateY(-20px)' },
+              },
+              rise: {
+                '0%': { bottom: '-100px', transform: 'translateX(0)' },
+                '50%': { transform: 'translateX(100px)' },
+                '100%': { bottom: '1080px', transform: 'translateX(-200px)' },
+              },
+              shine: {
+                '0%': { backgroundPosition: '200% center' },
+                '100%': { backgroundPosition: '-200% center' },
+              },
+              slideUp: {
+                '0%': { transform: 'translateY(100px)', opacity: '0' },
+                '100%': { transform: 'translateY(0)', opacity: '1' },
               }
             }
           },
@@ -42,6 +58,19 @@
         margin: 0;
         overflow-x: hidden;
         background-color: #fdf2f8;
+      }
+      .text-3d {
+        text-shadow: 
+          1px 1px 0 #d946ef,
+          2px 2px 0 #a855f7,
+          3px 3px 0 #6366f1;
+      }
+      .balloon-string {
+        height: 100px;
+        width: 1px;
+        background: rgba(0,0,0,0.2);
+        display: block;
+        margin: 0 auto;
       }
       ::-webkit-scrollbar {
         width: 8px;
