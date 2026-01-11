@@ -19,7 +19,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ playing, trackId, onToggle })
         <img 
           src="https://purepng.com/public/uploads/large/purepng.com-music-iconsymbolsiconsapple-iosiosios-8-iconsios-8-721522596085b6osz.png" 
           alt="Music Icon" 
-          className="w-16 h-16 relative z-10 drop-shadow-[0_0_15px_rgba(0,243,255,0.6)]"
+          className="w-16 h-16 relative z-10 drop-shadow-[0_0_15px_rgba(0,243,255,0.6)] animate-float"
         />
       </button>
     );
