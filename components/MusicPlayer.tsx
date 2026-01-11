@@ -8,7 +8,22 @@ interface MusicPlayerProps {
 }
 
 const MusicPlayer: React.FC<MusicPlayerProps> = ({ playing, trackId, onToggle }) => {
-  if (!playing) return null;
+  if (!playing) {
+    return (
+      <button 
+        onClick={onToggle}
+        className="fixed bottom-6 right-6 z-50 group transition-transform hover:scale-110 focus:outline-none"
+        aria-label="Play Music"
+      >
+        <div className="absolute inset-0 bg-cyber-primary blur-xl opacity-20 group-hover:opacity-50 rounded-full animate-pulse-neon"></div>
+        <img 
+          src="https://purepng.com/public/uploads/large/purepng.com-music-iconsymbolsiconsapple-iosiosios-8-iconsios-8-721522596085b6osz.png" 
+          alt="Music Icon" 
+          className="w-16 h-16 relative z-10 drop-shadow-[0_0_15px_rgba(0,243,255,0.6)]"
+        />
+      </button>
+    );
+  }
 
   return (
     <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-8 md:bottom-8 z-50 animate-[slideUp_0.8s_cubic-bezier(0.2,0.8,0.2,1)_forwards] md:w-auto flex justify-center md:block">
@@ -28,6 +43,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ playing, trackId, onToggle })
             <button 
               onClick={onToggle}
               className="text-white/50 hover:text-white transition-colors"
+              aria-label="Minimize Player"
             >
               <Minimize2 size={12} />
             </button>
