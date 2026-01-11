@@ -6,16 +6,16 @@ export const generateBirthdayWish = async (friendName: string): Promise<string> 
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
-      contents: `Write a short, heartwarming, and fun 3-sentence birthday wish for my friend named ${friendName}. Use emojis generously. The tone should be celebratory and sweet.`,
+      contents: `Write a playful, teasing, and slightly flirtatious birthday wish for my best friend named ${friendName}. It should be magnetic and make her blush slightly. Tell her she's absolute trouble but the most beautiful kind of trouble. Keep it affectionate, exciting, and appropriate, but make her feel that electric connection. Max 3 sentences.`,
       config: {
-        temperature: 0.9,
+        temperature: 1.0,
       }
     });
     
-    return response.text || "Happy Birthday! Wishing you the best day ever! 🎂🎉";
+    return response.text || `Happy Birthday, ${friendName}! You are absolute trouble, but you're my favorite kind of trouble. Stop looking so gorgeous today, it's unfair to everyone else! 😉🔥`;
   } catch (error) {
     console.error("Error generating wish:", error);
-    return "Happy Birthday! Sending you loads of love and joy on your special day! 🎈✨";
+    return `Happy Birthday, ${friendName}! You are absolute trouble, but you're my favorite kind of trouble. Stop looking so gorgeous today, it's unfair to everyone else! 😉🔥`;
   }
 };
 
@@ -23,14 +23,14 @@ export const generateBirthdayPoem = async (friendName: string): Promise<string> 
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
-      contents: `Write a short, sweet, rhyming birthday poem (4 lines) for my best friend ${friendName}. It should express how much she means to me and how she is the best girl ever.`,
+      contents: `Write a 4-line rhyming birthday poem for my best friend ${friendName}. The tone should be teasing, electric, and intimate. Focus on her irresistible charm and how she drives me crazy in the best way possible. Make it feel like a deep, exciting connection that creates butterflies.`,
       config: {
-        temperature: 0.8,
+        temperature: 0.9,
       }
     });
-    return response.text || "In every laugh and every smile,\nYou make life feel so worthwhile.\nHappy Birthday Ankita dear,\nCelebrating you year after year! 💖";
+    return response.text || "You’ve got that spark that drives me mad,\nThe best bad influence I’ve ever had.\nDangerously cute and totally true,\nThere is nobody else quite like you. 😏✨";
   } catch (error) {
     console.error("Error generating poem:", error);
-    return "In every laugh and every smile,\nYou make life feel so worthwhile.\nHappy Birthday Ankita dear,\nCelebrating you year after year! 💖";
+    return "You’ve got that spark that drives me mad,\nThe best bad influence I’ve ever had.\nDangerously cute and totally true,\nThere is nobody else quite like you. 😏✨";
   }
 };
