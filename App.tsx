@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import Confetti from './components/Confetti';
+import Starfield from './components/Starfield';
 import MusicPlayer from './components/MusicPlayer';
 import Balloons from './components/Balloons';
+import HoloCard from './components/HoloCard';
 import { generateBirthdayWish, generateBirthdayPoem } from './services/geminiService';
-import { Sparkles, Gift, Heart, PartyPopper, Cake, Feather, ArrowRight, Star } from 'lucide-react';
+import { Sparkles, Gift, Heart, Cpu, Zap, Star, Aperture, Terminal, Play } from 'lucide-react';
 
 const App: React.FC = () => {
-  const [started, setStarted] = useState<boolean>(false);
+  const [systemState, setSystemState] = useState<'LOCKED' | 'INITIALIZING' | 'ACTIVE'>('LOCKED');
   const [musicPlaying, setMusicPlaying] = useState<boolean>(false);
   const [wish, setWish] = useState<string>('');
   const [poem, setPoem] = useState<string>('');
   const [loadingWish, setLoadingWish] = useState<boolean>(false);
   const [loadingPoem, setLoadingPoem] = useState<boolean>(false);
-  const [showCard, setShowCard] = useState<boolean>(false);
+  const [warpSpeed, setWarpSpeed] = useState<number>(1);
   
+  const BIRTHDAY_TRACK_ID = "7mf1VOXSQCH53OoTfpFUTO";
+
   const generateWish = async () => {
     setLoadingWish(true);
     const newWish = await generateBirthdayWish("Ankita");
@@ -28,210 +31,249 @@ const App: React.FC = () => {
     setLoadingPoem(false);
   };
 
-  const handleOpenGift = () => {
-    setStarted(true);
-    setMusicPlaying(true); // Auto-start music on interaction
-    // Slight delay for the card animation to start after the gift "opens"
-    setTimeout(() => setShowCard(true), 300);
+  const initiateLaunchSequence = () => {
+    setSystemState('INITIALIZING');
+    setWarpSpeed(50); // Hyperdrive
+    
+    // Sequence timing
+    setTimeout(() => {
+      setWarpSpeed(2); // Cruise speed
+      setSystemState('ACTIVE');
+      setMusicPlaying(true);
+    }, 2500);
   };
 
   useEffect(() => {
-    // Generate initial poem silently so it's ready
     generatePoem();
   }, []);
 
-  // Intro Screen (Wrapped Gift)
-  if (!started) {
+  // -- RENDER: LOCKED STATE (The Portal) --
+  if (systemState === 'LOCKED') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-pink-300 via-purple-300 to-indigo-200 flex flex-col items-center justify-center relative overflow-hidden">
-        {/* Background Decorations */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-10 left-10 text-white/30 animate-float"><Heart size={150} /></div>
-          <div className="absolute bottom-20 right-10 text-white/30 animate-float" style={{animationDelay: '1s'}}><Sparkles size={180} /></div>
-          <div className="absolute top-1/2 left-20 text-white/20 animate-pulse-slow"><Star size={80} /></div>
-        </div>
+      <div className="min-h-screen bg-cyber-black flex flex-col items-center justify-center relative overflow-hidden font-display selection:bg-cyber-primary selection:text-black">
+        <Starfield speed={0.5} />
+        
+        <div className="z-10 text-center relative p-8 w-full max-w-lg">
+           {/* Rotating Ring */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[500px] h-[300px] md:h-[500px] border border-cyber-primary/20 rounded-full animate-[spin_10s_linear_infinite]"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] md:w-[400px] h-[240px] md:h-[400px] border border-dashed border-cyber-secondary/20 rounded-full animate-[spin_15s_linear_infinite_reverse]"></div>
 
-        <div className="z-10 text-center px-4 animate-[fadeIn_1s_ease-out] relative">
-          <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-white/20 blur-3xl rounded-full pointer-events-none"></div>
-          
-          <h1 className="font-script text-6xl md:text-8xl text-white mb-6 drop-shadow-lg text-3d transform -rotate-2">
-            Hey Ankita!
+          <h1 className="text-4xl md:text-8xl text-transparent bg-clip-text bg-gradient-to-r from-cyber-primary via-white to-cyber-secondary drop-shadow-[0_0_15px_rgba(0,243,255,0.5)] mb-4 tracking-tight animate-pulse-neon">
+            SYSTEM DETECTED
           </h1>
-          <p className="text-2xl text-white/90 mb-12 font-sans font-medium max-w-lg mx-auto drop-shadow-md">
-            Someone special (me!) prepared a magical surprise for you. 
-          </p>
+          <p className="text-cyber-primary/70 text-sm md:text-xl tracking-[0.3em] md:tracking-[0.5em] mb-12 uppercase">Target: Ankita</p>
           
           <button 
-            onClick={handleOpenGift}
-            className="group relative flex flex-col items-center justify-center transition-transform hover:scale-105 active:scale-95 focus:outline-none"
+            onClick={initiateLaunchSequence}
+            className="group relative inline-flex items-center justify-center w-full md:w-auto"
           >
-            <div className="relative">
-              <div className="absolute inset-0 bg-yellow-400 blur-[60px] opacity-40 group-hover:opacity-70 transition-opacity rounded-full animate-pulse-slow"></div>
-              <div className="bg-gradient-to-br from-pink-500 to-rose-600 p-10 rounded-3xl shadow-2xl relative z-10 border-4 border-white/40 ring-4 ring-pink-300/50">
-                <Gift size={80} className="text-white animate-bounce-gentle" />
-                {/* Ribbon */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-full bg-yellow-300/80 shadow-sm"></div>
-                <div className="absolute top-1/2 left-0 -translate-y-1/2 w-full h-4 bg-yellow-300/80 shadow-sm"></div>
-              </div>
+            <div className="absolute inset-0 bg-cyber-primary blur-lg opacity-40 group-hover:opacity-100 transition-opacity duration-300 rounded-full animate-pulse-neon"></div>
+            <div className="relative bg-black border border-cyber-primary/50 text-cyber-primary hover:bg-cyber-primary hover:text-black px-8 py-4 md:px-12 rounded-full font-bold tracking-widest uppercase transition-all duration-300 flex items-center justify-center gap-4 hover:scale-105 shadow-[0_0_30px_rgba(0,243,255,0.2)] text-sm md:text-base w-full md:w-auto">
+              <Zap size={20} className="fill-current" />
+              Initialize Party Protocol
             </div>
-            <span className="mt-8 font-bold text-white bg-white/20 backdrop-blur-md border border-white/50 px-8 py-3 rounded-full shadow-xl flex items-center gap-3 group-hover:bg-white/30 transition-all text-lg">
-              Open Your Present <ArrowRight size={20} />
-            </span>
           </button>
         </div>
       </div>
     );
   }
 
-  // Main Birthday App
+  // -- RENDER: INITIALIZING (The Warp) --
+  if (systemState === 'INITIALIZING') {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center relative overflow-hidden px-4">
+        <Starfield speed={warpSpeed} />
+        <div className="z-10 text-center w-full">
+            <div className="text-3xl md:text-6xl font-display text-white animate-glitch tracking-widest break-words">
+                ACCESSING MAINFRAME...
+            </div>
+            <div className="mt-8 w-full max-w-md h-2 bg-gray-900 rounded-full overflow-hidden mx-auto border border-white/20">
+                <div className="h-full bg-cyber-primary animate-[scanner_1s_ease-in-out_infinite]"></div>
+            </div>
+        </div>
+      </div>
+    );
+  }
+
+  // -- RENDER: ACTIVE (The Main Interface) --
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-100 to-yellow-50 relative overflow-hidden font-sans text-gray-800">
-      <Confetti />
+    <div className="min-h-screen bg-cyber-black relative overflow-x-hidden font-sans text-white selection:bg-cyber-accent selection:text-white">
+      <Starfield speed={warpSpeed} />
       <Balloons />
-      <MusicPlayer playing={musicPlaying} onToggle={() => setMusicPlaying(!musicPlaying)} />
+      <MusicPlayer 
+        playing={musicPlaying} 
+        trackId={BIRTHDAY_TRACK_ID}
+        onToggle={() => setMusicPlaying(!musicPlaying)} 
+      />
 
-      <main className="relative z-10 container mx-auto px-4 py-8 min-h-screen flex flex-col items-center justify-center">
+      <main className="relative z-10 container mx-auto px-4 py-8 md:py-12 flex flex-col items-center">
         
-        {/* Floating Background Elements */}
-        <div className="absolute top-10 left-10 text-pink-400 animate-float opacity-40 blur-[2px]">
-          <PartyPopper size={84} />
-        </div>
-        <div className="absolute bottom-20 right-10 text-purple-400 animate-float opacity-40 blur-[2px]" style={{ animationDelay: '2s' }}>
-          <Cake size={100} />
-        </div>
+        {/* Floating Cyber Elements */}
+        <div className="fixed top-20 left-10 text-cyber-primary/20 animate-float pointer-events-none hidden md:block"><Aperture size={120} /></div>
+        <div className="fixed bottom-32 right-10 text-cyber-secondary/20 animate-[float_8s_ease-in-out_infinite] pointer-events-none hidden md:block"><Cpu size={100} /></div>
 
-        {/* Main Card */}
-        <div 
-          className={`
-            w-full max-w-3xl bg-white/70 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] p-6 md:p-12 border border-white/80
-            transform transition-all duration-1000 ease-[cubic-bezier(0.34,1.56,0.64,1)] mb-12 relative
-            ${showCard ? 'scale-100 opacity-100 translate-y-0 rotate-0' : 'scale-75 opacity-0 translate-y-32 rotate-6'}
-          `}
-        >
-           {/* Card decorative border */}
-           <div className="absolute inset-2 border-2 border-dashed border-white/50 rounded-[2rem] pointer-events-none"></div>
-
-          <div className="text-center mb-10 relative z-10">
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs font-extrabold px-6 py-2 rounded-full mb-6 shadow-lg tracking-widest uppercase animate-bounce-gentle">
-              <Star size={12} className="fill-white" />
-              VIP: Very Important Princess
-              <Star size={12} className="fill-white" />
-            </div>
-            
-            <h1 className="font-script text-6xl md:text-9xl text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 drop-shadow-sm mb-2 animate-[float_4s_ease-in-out_infinite] bg-[length:200%_auto] animate-shine p-2">
-              Happy Birthday
-            </h1>
-            <h2 className="font-sans font-black text-5xl md:text-8xl text-gray-800 tracking-tighter mb-8 text-3d transform -rotate-2 inline-block">
-              Ankita!
-            </h2>
-            
-            <p className="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto leading-relaxed mb-10 font-light">
-              Today the world sparkles a little brighter because it's your day! ✨
-            </p>
-
-            {/* I Love You Message - Special Highlight */}
-            <div className="bg-gradient-to-r from-red-50 to-pink-50 border-2 border-red-100 rounded-3xl p-8 mb-10 transform hover:scale-[1.02] transition-transform duration-300 shadow-md relative overflow-hidden group">
-              <div className="absolute -right-10 -top-10 text-red-100 opacity-50 group-hover:rotate-12 transition-transform duration-500"><Heart size={150} className="fill-current" /></div>
-              <div className="flex flex-col items-center text-center relative z-10">
-                <div className="bg-white p-3 rounded-full shadow-md mb-4">
-                  <Heart className="text-red-500 fill-red-500 animate-pulse" size={40} />
-                </div>
-                <p className="font-script text-2xl md:text-4xl text-red-600 leading-normal">
-                  "I love you very much! You are the best girl I've ever known and my amazing best friend."
-                </p>
+        {/* 1. HERO SECTION */}
+        <div className="w-full max-w-4xl mb-12 md:mb-16 perspective-1000">
+            <div className="text-center animate-pop-in">
+              <div className="inline-flex items-center gap-2 md:gap-3 border border-cyber-accent/30 bg-cyber-accent/10 px-4 py-1.5 md:px-6 md:py-2 rounded-full mb-6 backdrop-blur-md">
+                <Star size={12} className="text-cyber-accent animate-spin-slow" />
+                <span className="text-cyber-accent font-display tracking-widest text-[10px] md:text-xs uppercase">VIP - Very Important Princess</span>
+                <Star size={12} className="text-cyber-accent animate-spin-slow" />
               </div>
+
+              <h1 className="font-display text-5xl md:text-9xl mb-2 md:mb-4 leading-none">
+                <span className="block text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400 opacity-90 text-2xl md:text-4xl mb-2">HAPPY</span>
+                <span className="block text-neon-blue glitch-text tracking-tight" data-text="BIRTHDAY">BIRTHDAY</span>
+              </h1>
+              <h2 className="font-script text-5xl md:text-8xl text-neon-pink transform -rotate-3 md:-rotate-6 -mt-2 md:-mt-4 block relative z-10">Ankita</h2>
+              
+              <p className="mt-8 text-base md:text-xl text-cyan-100/60 max-w-2xl mx-auto font-light tracking-wide border-l-2 border-cyber-primary pl-4 md:pl-6 text-left">
+                Initialization complete. The universe has been reconfigured to celebrate your existence. Systems operating at 100% joy capacity.
+              </p>
             </div>
+        </div>
 
-            {/* Poem Section */}
-            <div className="relative bg-white/50 rounded-2xl p-8 mb-10 border border-purple-100 shadow-inner">
-               <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-purple-100 text-purple-600 px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wider shadow-sm flex items-center gap-2">
-                 <Feather size={16} /> A Poem for You
-               </div>
-               
-               <div className="font-script text-2xl md:text-3xl text-purple-900 leading-loose text-center min-h-[140px] flex items-center justify-center mt-4">
-                  {loadingPoem ? (
-                    <div className="flex gap-2">
-                      <div className="w-3 h-3 bg-purple-400 rounded-full animate-bounce"></div>
-                      <div className="w-3 h-3 bg-purple-400 rounded-full animate-bounce delay-100"></div>
-                      <div className="w-3 h-3 bg-purple-400 rounded-full animate-bounce delay-200"></div>
-                    </div>
-                  ) : (
-                    <p className="whitespace-pre-line drop-shadow-sm">{poem}</p>
-                  )}
-               </div>
-               
-               <div className="mt-6 flex justify-center">
-                  <button 
-                    onClick={generatePoem}
-                    disabled={loadingPoem}
-                    className="text-xs font-bold text-purple-500 hover:text-purple-700 hover:bg-purple-100 px-4 py-2 rounded-full uppercase tracking-widest transition-all"
-                  >
-                    ✨ Write Another Poem ✨
-                  </button>
-               </div>
-            </div>
-
-          </div>
-
-          {/* Interactive Wish Section */}
-          <div className="bg-gradient-to-r from-pink-500 to-purple-600 rounded-3xl p-1 shadow-xl relative overflow-hidden">
-            <div className="bg-white/95 backdrop-blur-sm rounded-[1.3rem] p-6 md:p-8">
-              <div className="flex flex-col md:flex-row items-center gap-6">
-                <div className="bg-pink-100 p-4 rounded-full text-pink-500 shrink-0 shadow-inner">
-                  <Gift className="text-pink-600" size={32} />
-                </div>
-                <div className="flex-1 text-center md:text-left">
-                  <h3 className="font-bold text-2xl text-gray-800 mb-2 flex items-center justify-center md:justify-start gap-2">
-                    AI Birthday Wishes
-                    {loadingWish && <Sparkles size={20} className="animate-spin text-purple-500" />}
-                  </h3>
-                  
-                  <div className="min-h-[60px] text-gray-600 text-lg leading-relaxed mb-4 md:mb-0">
-                    {wish ? (
-                      <p className="animate-[fadeIn_0.5s_ease-out] font-medium">{wish}</p>
-                    ) : (
-                      <p className="text-gray-400 italic">Tap the button to generate a magical wish...</p>
-                    )}
-                  </div>
-                </div>
+        {/* 2. THE CORE (HoloCard with Logic) */}
+        <div className="w-full max-w-2xl mb-16 md:mb-24 z-20">
+          <HoloCard>
+             <div className="p-6 md:p-12 text-center relative">
+                {/* Decoration */}
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyber-primary to-transparent opacity-50"></div>
                 
-                <button
-                  onClick={generateWish}
-                  disabled={loadingWish}
-                  className="shrink-0 group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-200 bg-gray-900 rounded-2xl hover:bg-gray-800 focus:outline-none focus:ring-4 focus:ring-purple-300 disabled:opacity-70 shadow-lg hover:-translate-y-1"
-                >
-                  {loadingWish ? (
-                    <span className="flex items-center gap-2">Thinking...</span>
-                  ) : (
-                    <span className="flex items-center gap-2">
-                      <Sparkles size={20} className="text-yellow-300" />
-                      Generate Wish
-                    </span>
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
-          
-        </div>
+                <Heart size={32} className="mx-auto text-cyber-accent mb-4 md:mb-6 animate-pulse-neon fill-current md:w-12 md:h-12" />
+                
+                <h3 className="text-lg md:text-2xl font-display text-white mb-4 md:mb-6 uppercase tracking-widest">Primary Objective: Love</h3>
+                
+                <p className="text-base md:text-xl text-gray-300 leading-relaxed font-light mb-6 md:mb-8">
+                  "I love you infinitely. In a world of algorithms and variables, you are my only constant. You are the best girl I have ever known and my ultimate teammate."
+                </p>
 
-        {/* Gallery/Photos Placeholder */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl px-4 pb-32">
-           {['joy', 'party', 'friends'].map((tag, idx) => (
-             <div key={idx} className="group relative aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border-8 border-white transform transition duration-500 hover:scale-105 hover:rotate-2 hover:z-10">
-                <img 
-                  src={`https://picsum.photos/seed/ankita${idx}/500/400`} 
-                  alt="Birthday memory" 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                  <span className="text-white font-bold text-lg capitalize flex items-center gap-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                    <Heart size={20} className="fill-pink-500 text-pink-500" /> Sweet Memories
-                  </span>
+                <div className="grid grid-cols-2 gap-4 text-[10px] md:text-xs font-mono text-cyber-primary/60 border-t border-white/10 pt-4 md:pt-6">
+                   <div>STATUS: <span className="text-cyber-primary">CONNECTED</span></div>
+                   <div>PING: <span className="text-cyber-primary">1ms</span></div>
                 </div>
              </div>
-           ))}
+          </HoloCard>
         </div>
+
+        {/* 3. AI POETRY TERMINAL */}
+        <div className="w-full max-w-3xl mb-16 md:mb-20">
+           <div className="bg-[#0a0a10] border border-gray-800 rounded-lg overflow-hidden shadow-[0_0_50px_rgba(188,19,254,0.1)]">
+              {/* Terminal Header */}
+              <div className="bg-[#1a1a24] px-4 py-2 flex items-center gap-2 border-b border-gray-800">
+                <div className="flex gap-2">
+                   <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-red-500/50"></div>
+                   <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-yellow-500/50"></div>
+                   <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-green-500/50"></div>
+                </div>
+                <div className="ml-4 text-[10px] md:text-xs font-mono text-gray-500 flex items-center gap-2">
+                  <Terminal size={10} className="md:w-3 md:h-3" />
+                  gemini_core_v3.sh
+                </div>
+              </div>
+              
+              {/* Terminal Body */}
+              <div className="p-4 md:p-8 font-mono text-xs md:text-base relative min-h-[160px] md:min-h-[200px] flex flex-col justify-center">
+                 {loadingPoem ? (
+                    <div className="text-cyber-secondary animate-pulse">
+                      &gt; ESTABLISHING NEURAL LINK...<br/>
+                      &gt; DOWNLOADING CREATIVITY MODULES...<br/>
+                      <span className="inline-block w-2 h-4 bg-cyber-secondary animate-pulse ml-1 align-middle"></span>
+                    </div>
+                 ) : (
+                    <div className="relative">
+                      <div className="absolute -left-2 md:-left-4 top-0 bottom-0 w-1 bg-cyber-secondary/30"></div>
+                      <p className="text-cyber-primary whitespace-pre-line leading-loose drop-shadow-md">
+                        {poem}
+                      </p>
+                      <div className="mt-4 text-gray-600 animate-pulse">_</div>
+                    </div>
+                 )}
+              </div>
+
+              {/* Terminal Footer Action */}
+              <div className="p-3 md:p-4 bg-[#11111a] border-t border-gray-800 flex justify-end">
+                 <button 
+                   onClick={generatePoem}
+                   disabled={loadingPoem}
+                   className="text-[10px] md:text-xs font-bold text-cyber-secondary hover:text-white hover:bg-cyber-secondary/20 px-3 py-1.5 md:px-4 md:py-2 rounded transition-colors uppercase tracking-wider flex items-center gap-2"
+                 >
+                   <Terminal size={12} className="md:w-[14px] md:h-[14px]" />
+                   Rerun Script
+                 </button>
+              </div>
+           </div>
+        </div>
+
+        {/* 4. WISH GENERATOR (Glass Panel) */}
+        <div className="w-full max-w-4xl relative group mb-32">
+           <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
+           <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 md:p-10 flex flex-col md:flex-row items-center gap-6 md:gap-8">
+              
+              <div className="flex-1 w-full text-center md:text-left">
+                 <h3 className="text-xl md:text-2xl font-display text-white mb-2 flex items-center justify-center md:justify-start gap-3">
+                   <Sparkles className="text-yellow-400 w-5 h-5 md:w-6 md:h-6" />
+                   Quantum Wish Engine
+                 </h3>
+                 <p className="text-gray-400 font-light mb-6 text-sm md:text-base">
+                    Powered by advanced Generative AI to craft the perfect sentiment.
+                 </p>
+                 <div className="bg-black/30 rounded-lg p-4 md:p-6 min-h-[80px] flex items-center justify-center md:justify-start text-base md:text-lg text-cyan-50">
+                    {loadingWish ? (
+                      <span className="animate-pulse">Processing natural language inputs...</span>
+                    ) : (
+                      wish || "System idle. Awaiting user input."
+                    )}
+                 </div>
+              </div>
+
+              <button
+                onClick={generateWish}
+                disabled={loadingWish}
+                className="shrink-0 h-16 w-16 md:h-20 md:w-20 rounded-full bg-gradient-to-br from-cyber-primary to-blue-600 flex items-center justify-center shadow-[0_0_20px_rgba(0,243,255,0.4)] hover:scale-110 hover:rotate-12 transition-all duration-300 group-disabled:opacity-50 disabled:grayscale"
+              >
+                {loadingWish ? (
+                   <div className="w-6 h-6 md:w-8 md:h-8 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                   <Play size={24} className="text-white fill-white ml-1 md:w-[32px] md:h-[32px]" />
+                )}
+              </button>
+           </div>
+        </div>
+
+        {/* 5. MEMORY MATRIX (Grid) */}
+        <div className="w-full max-w-6xl pb-24">
+           <h3 className="text-center font-display text-2xl md:text-3xl mb-8 md:mb-12 text-transparent bg-clip-text bg-gradient-to-r from-cyber-secondary to-cyber-accent">MEMORY_MATRIX_LOADED</h3>
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="group relative h-64 md:h-80 rounded-2xl overflow-hidden cursor-pointer">
+                   {/* Image */}
+                   <img 
+                      src={`https://picsum.photos/seed/ankita${i + 5}/600/800`} 
+                      alt="Memory" 
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0"
+                   />
+                   
+                   {/* Overlay */}
+                   <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+                   
+                   {/* Border Glow */}
+                   <div className="absolute inset-0 border-2 border-transparent group-hover:border-cyber-primary transition-colors duration-300 rounded-2xl"></div>
+
+                   <div className="absolute bottom-6 left-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                      <div className="text-cyber-primary font-mono text-xs mb-1">DATA_LOG_00{i+1}</div>
+                      <div className="text-white font-bold text-lg md:text-xl">Core Memory</div>
+                   </div>
+                </div>
+              ))}
+           </div>
+        </div>
+
+        <div className="text-center text-white/20 text-[10px] md:text-xs font-mono pb-8">
+           SYSTEM ARCHITECT: YOUR BEST FRIEND <br/>
+           RENDERED IN REACT.JS :: TAILWIND :: GEMINI API
+        </div>
+
       </main>
     </div>
   );

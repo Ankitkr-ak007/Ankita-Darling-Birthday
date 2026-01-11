@@ -1,66 +1,50 @@
 import React, { useEffect, useState } from 'react';
 
-const COLORS = ['#ff7eb3', '#ff758c', '#a855f7', '#7afcff', '#feff9c', '#ff8fa3'];
+const COLORS = ['rgba(0, 243, 255, 0.4)', 'rgba(188, 19, 254, 0.4)', 'rgba(255, 0, 153, 0.4)'];
 
 interface BalloonProps {
   delay: number;
   speed: number;
   left: number;
   color: string;
-  scale: number;
+  size: number;
 }
 
 const Balloons: React.FC = () => {
   const [balloons, setBalloons] = useState<BalloonProps[]>([]);
 
   useEffect(() => {
-    // Generate random balloons
-    const count = 15;
+    const count = 12;
     const newBalloons: BalloonProps[] = [];
     
     for (let i = 0; i < count; i++) {
       newBalloons.push({
-        delay: Math.random() * 10,
-        speed: 15 + Math.random() * 10, // Duration in seconds
-        left: Math.random() * 100, // Percentage
+        delay: Math.random() * 5,
+        speed: 10 + Math.random() * 10,
+        left: Math.random() * 100,
         color: COLORS[Math.floor(Math.random() * COLORS.length)],
-        scale: 0.5 + Math.random() * 0.5,
+        size: 40 + Math.random() * 60,
       });
     }
     setBalloons(newBalloons);
   }, []);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden mix-blend-screen">
       {balloons.map((b, i) => (
         <div
           key={i}
-          className="absolute bottom-[-150px] opacity-80"
+          className="absolute bottom-[-150px] rounded-full blur-md"
           style={{
             left: `${b.left}%`,
+            width: `${b.size}px`,
+            height: `${b.size}px`,
+            background: b.color,
+            boxShadow: `0 0 ${b.size/2}px ${b.color}`,
             animation: `rise ${b.speed}s linear infinite`,
             animationDelay: `${b.delay}s`,
-            transform: `scale(${b.scale})`,
           }}
         >
-          {/* Balloon Body */}
-          <div 
-            className="w-24 h-32 rounded-[50%] relative"
-            style={{
-              backgroundColor: b.color,
-              boxShadow: 'inset -10px -10px 0 rgba(0,0,0,0.07)',
-            }}
-          >
-            {/* Shine */}
-            <div className="absolute top-4 left-4 w-6 h-10 rounded-[50%] bg-white/30 rotate-45"></div>
-            {/* Knot */}
-            <div 
-              className="absolute bottom-[-8px] left-[50%] translate-x-[-50%] w-0 h-0 border-l-[8px] border-r-[8px] border-b-[12px] border-l-transparent border-r-transparent"
-              style={{ borderBottomColor: b.color }}
-            ></div>
-          </div>
-          {/* String */}
-          <div className="balloon-string"></div>
         </div>
       ))}
     </div>
